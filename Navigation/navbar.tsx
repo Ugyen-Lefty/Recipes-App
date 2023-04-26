@@ -17,18 +17,11 @@ import {
 } from "react-native";
 import { useState, useEffect } from "react";
 import { createStackNavigator } from "@react-navigation/stack";
-import TopHeader from "../Components/TopHeader";
-import Header from "../Components/Header";
-import Avatar from "../Components/Avatar";
-import Exp from "../Components/Exp";
 import SearchScreen from "../Screens/SearchScreen";
-import { useAppDispatch } from "../state/store/store";
-import { setRecipes } from "../state/favorites/favorites.slice";
 
 export default function Navbar() {
 	const Tab = createBottomTabNavigator();
 	const Stack = createStackNavigator();
-	// const dispatch = useAppDispatch();
 
 	const CustomButton = ({ children, onPress }: any) => (
 		<TouchableOpacity style={styles.centerButton} onPress={onPress}>
@@ -47,17 +40,12 @@ export default function Navbar() {
 	function getAllRecipes() {
 		const recipesArr: any = [];
 		fetch(
-			// For Search
-			//https://yum-foods-default-rtdb.asia-southeast1.firebasedatabase.app/Recipes/Recipes.json?orderBy=%22name%22&startAt=%22C%22
-			//For Exact query or search
-			//https://yum-foods-default-rtdb.asia-southeast1.firebasedatabase.app/Recipe.json?orderBy="Name"&startAt="Chicken"&limitToFirst=10&endAt="Chicken+\uf8ff"
 			`https://yum-foods-default-rtdb.asia-southeast1.firebasedatabase.app/Recipes.json?orderBy="name"`,
 			{
 				method: "GET",
 			}
 		).then((res) =>
 			res.json().then((recipes) => {
-				// dispatch(setRecipes(recipes));
 				for (const key in recipes) {
 					recipesArr.push(key);
 				}
@@ -86,14 +74,7 @@ export default function Navbar() {
 						/>
 						<Text style={styles.title}>Yum 😋</Text>
 					</View>
-					// <ImageBackground
-					// 	source={{
-					// 		uri: "https://wallpapers.com/images/hd/asian-anime-food-ramen-j3pryr55soe062ti.jpg",
-					// 	}}
-					// 	style={styles.headerBackground}>
-					// </ImageBackground>
 				),
-				// <Header />
 				tabBarShowLabel: false,
 				tabBarStyle: {
 					position: "absolute",
@@ -103,18 +84,9 @@ export default function Navbar() {
 					borderRadius: 15,
 					height: 90,
 				},
-				// headerRight: () => (
-				// 	<View style={{ marginRight: 50 }}>
-				// 		<Button onPress={() => alert("This is a button!")} title="Info" />
-				// 	</View>
-				// ),
 			}}>
 			<Tab.Screen
 				name="Home"
-				// component={HomeScreen}
-				// children={() => <HomeScreen random={random} />}
-				// {(props) => <RecipesScreen {...props} />}
-				// {(props) => <RecipesScreen {...props} />}
 				options={{
 					tabBarIcon: ({ focused }) => (
 						<View>
@@ -126,7 +98,9 @@ export default function Navbar() {
 						</View>
 					),
 				}}>
-				{(props) => <HomeScreen random={random} {...props} />}
+				{(props) => (
+					<HomeScreen random={random} {...props} reload={getAllRecipes} />
+				)}
 			</Tab.Screen>
 			<Tab.Screen
 				name="Recipes"

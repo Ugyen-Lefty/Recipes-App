@@ -11,13 +11,15 @@ import Icon from "react-native-vector-icons/FontAwesome";
 import { Badge } from "react-native-elements";
 import Ingredients from "../Components/Ingredients";
 import Steps from "../Components/Steps";
+import WebView from "react-native-webview";
 
 export default function DetailsScreen({ route, navigation }: any) {
 	const { data } = route?.params;
 
 	const [isFavorite, setIsFavorite] = React.useState(data?.fav);
+	const [isWebView, setIsWebView] = React.useState(false);
 
-	const handleFavoritePress = () => {
+	function handleFavoritePress() {
 		setIsFavorite(!isFavorite);
 		fetch(
 			`https://yum-foods-default-rtdb.asia-southeast1.firebasedatabase.app/Recipes/${data?.id}.json`,
@@ -41,46 +43,70 @@ export default function DetailsScreen({ route, navigation }: any) {
 			.catch((error) => {
 				console.error("There was a problem with the fetch operation:", error);
 			});
-	};
+	}
+
+	function goToWebView() {
+		setIsWebView(true);
+	}
 
 	function goBack() {
 		navigation.navigate("Main" as never);
 	}
 
 	return (
-		<ScrollView style={{ marginBottom: 100 }}>
-			<View style={styles.container}>
-				<View style={styles.header}>
-					<TouchableOpacity onPress={goBack}>
-						<Icon
-							name="chevron-left"
-							size={20}
-							color="#f7ca18"
-							style={styles.back}
-						/>
-					</TouchableOpacity>
-					<Text style={styles.title}>{data?.name}</Text>
-					<TouchableOpacity onPress={handleFavoritePress}>
-						<Icon
-							name={isFavorite ? "star" : "star-o"}
-							size={24}
-							color="#f7ca18"
-						/>
-					</TouchableOpacity>
+		<>
+			{isWebView ? (
+				<View style={{ flex: 1 }}>
+					<WebView source={{ uri: data?.originalURL }} style={{ flex: 1 }} />
 				</View>
-				<View style={styles.imageContainer}>
-					<Image source={{ uri: data?.imageURL }} style={styles.image} />
-				</View>
-				<View style={styles.ingredientsContainer}>
-					<Text style={styles.sectionTitle}>Ingredients</Text>
-					<Ingredients data={data?.ingredients} />
-				</View>
-				<View style={styles.stepsContainer}>
-					<Text style={styles.sectionTitle}>Steps</Text>
-					<Steps data={data?.steps} />
-				</View>
-			</View>
-		</ScrollView>
+			) : (
+				<ScrollView style={{ marginBottom: 100 }}>
+					<View style={styles.container}>
+						<View style={styles.header}>
+							<TouchableOpacity onPress={goBack}>
+								<Icon
+									name="chevron-left"
+									size={20}
+									color="#f7ca18"
+									style={styles.back}
+								/>
+							</TouchableOpacity>
+							<Text style={styles.title}>{data?.name}</Text>
+							<TouchableOpacity onPress={handleFavoritePress}>
+								<Icon
+									name={isFavorite ? "star" : "star-o"}
+									size={24}
+									color="#f7ca18"
+								/>
+							</TouchableOpacity>
+						</View>
+						<View style={styles.imageContainer}>
+							<Image source={{ uri: data?.imageURL }} style={styles.image} />
+						</View>
+						<View style={styles.ingredientsContainer}>
+							<Text style={styles.sectionTitle}>Ingredients</Text>
+							<Ingredients data={data?.ingredients} />
+						</View>
+						<View style={styles.stepsContainer}>
+							<Text style={styles.sectionTitle}>Steps</Text>
+							<Steps data={data?.steps} />
+						</View>
+						{data?.originalURL && (
+							<View style={styles.stepsContainer}>
+								<Text style={styles.sectionTitle}>
+									For more information you can visit
+								</Text>
+								<TouchableOpacity onPress={goToWebView}>
+									<Text style={{ fontSize: 18, color: "#2ecc71", margin: 10 }}>
+										{data?.originalURL}
+									</Text>
+								</TouchableOpacity>
+							</View>
+						)}
+					</View>
+				</ScrollView>
+			)}
+		</>
 	);
 }
 
@@ -134,6 +160,8 @@ const styles = StyleSheet.create({
 	},
 	sectionTitle: {
 		fontSize: 23,
+		textAlign: "center",
+
 		letterSpacing: 2,
 		fontWeight: "bold",
 		marginBottom: 8,

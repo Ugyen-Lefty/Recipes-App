@@ -9,48 +9,57 @@ import {
 	ImageBackground,
 	TouchableOpacity,
 } from "react-native";
+import { Motion } from "@legendapp/motion";
 
-export default function HomeScreen({ random, navigation }: any) {
+export default function HomeScreen({ random, navigation, reload }: any) {
+	const [refreshing, setRefreshing] = useState(false);
+
+	const refresh = useCallback(() => {
+		setRefreshing(true);
+		setTimeout(() => {
+			setRefreshing(false);
+			reload();
+		}, 2000);
+	}, []);
+
 	function navigate(recipe: any) {
-		// navigation.navigate("Details" as never, { data: recipe } as never);
 		navigation.navigate("Recipes", {
 			screen: "Details",
 			params: { data: recipe },
 		});
 	}
+
 	return (
 		<ImageBackground
 			source={{
 				uri: "https://49.media.tumblr.com/1073bc050e37a22119d4d878c7e00f83/tumblr_o35cp4TzqU1tizru1o1_500.gif",
-				// uri: "https://data.whicdn.com/images/292512295/original.gif",
-				// uri: "https://i.pinimg.com/originals/77/c8/6a/77c86ac76126738f64760a531ccaa041.gif",
-				// uri: "https://img1.wallspic.com/crops/4/2/8/3/6/163824/163824-food-white-orange-yellow-line-828x1792.jpg",
 			}}
 			style={styles.backgroundImage}>
 			<View style={styles.overlay} />
 			<ScrollView
 				contentContainerStyle={styles.scrollView}
-				// refreshControl={
-				// 	<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-				// }
-			>
+				refreshControl={
+					<RefreshControl refreshing={refreshing} onRefresh={refresh} />
+				}>
 				<View style={styles.container}>
-					<TouchableOpacity onPress={() => navigate(random)}>
-						<View style={styles.card}>
-							<Text style={styles.text}>Recipe of the day</Text>
-							<Image
-								source={{
-									uri: random?.imageURL,
-								}}
-								key={random?.imageURL}
-								style={styles.image}
-							/>
-							<Text style={styles.smallText}>
-								{/* Name of the food la in handwriting font */}
-								{random?.name}
-							</Text>
-						</View>
-					</TouchableOpacity>
+					<Motion.View
+						initial={{ opacity: 0, y: 50 }}
+						animate={{ opacity: 1, y: 0 }}
+						transition={{ type: "spring", stiffness: 100 }}>
+						<TouchableOpacity onPress={() => navigate(random)}>
+							<View style={styles.card}>
+								<Text style={styles.text}>Recipe of the day</Text>
+								<Image
+									source={{
+										uri: random?.imageURL,
+									}}
+									key={random?.imageURL}
+									style={styles.image}
+								/>
+								<Text style={styles.smallText}>{random?.name}</Text>
+							</View>
+						</TouchableOpacity>
+					</Motion.View>
 				</View>
 			</ScrollView>
 		</ImageBackground>
@@ -64,7 +73,7 @@ const styles = StyleSheet.create({
 	},
 	overlay: {
 		...StyleSheet.absoluteFillObject,
-		backgroundColor: "rgba(0,0,0,0.3)", // Change opacity to adjust darkness
+		backgroundColor: "rgba(0,0,0,0.3)",
 	},
 	container: {
 		flex: 1,

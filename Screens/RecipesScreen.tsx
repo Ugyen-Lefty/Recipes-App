@@ -25,15 +25,6 @@ export default function RecipesScreen({ navigation }: any) {
 	const dispatch = useAppDispatch();
 	const data = useSelector((state: any) => state.data.data);
 
-	// useEffect(() => {
-	// 	// fetch(
-	// 	// 	`https://yum-foods-default-rtdb.asia-southeast1.firebasedatabase.app/Recipes.json?orderBy="name"`
-	// 	// )
-	// 	// 	.then((response) => response.json())
-	// 	// 	.then((json) => setRecipes(json))
-	// 	// 	.catch((error) => console.error(error));
-	// 	dispatch(fetchData);
-	// }, [dispatch]);
 	useEffect(() => {
 		dispatch(fetchData());
 	}, [dispatch]);
@@ -42,9 +33,6 @@ export default function RecipesScreen({ navigation }: any) {
 		<ImageBackground
 			source={{
 				uri: "https://49.media.tumblr.com/1073bc050e37a22119d4d878c7e00f83/tumblr_o35cp4TzqU1tizru1o1_500.gif",
-				// uri: "https://data.whicdn.com/images/292512295/original.gif",
-				// uri: "https://i.pinimg.com/originals/77/c8/6a/77c86ac76126738f64760a531ccaa041.gif",
-				// uri: "https://img1.wallspic.com/crops/4/2/8/3/6/163824/163824-food-white-orange-yellow-line-828x1792.jpg",
 			}}
 			style={styles.backgroundImage}>
 			<View style={styles.overlay} />
@@ -58,14 +46,6 @@ export default function RecipesScreen({ navigation }: any) {
 				</View>
 			</View>
 		</ImageBackground>
-		// <View style={styles.container}>
-		// 	<Text>{recipe?.recipes?.name}</Text>
-		// 	{/* <FlatList
-		// 		data={recipe}
-		// 		renderItem={({ item }) => <Card data={item} />}
-		// 		keyExtractor={(item) => item.name}
-		// 	/> */}
-		// </View>
 	);
 }
 
@@ -81,6 +61,6 @@ const styles = StyleSheet.create({
 	},
 	overlay: {
 		...StyleSheet.absoluteFillObject,
-		backgroundColor: "rgba(0,0,0,0.3)", // Change opacity to adjust darkness
+		backgroundColor: "rgba(0,0,0,0.3)",
 	},
 });
