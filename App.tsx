@@ -1,22 +1,18 @@
-import { StatusBar, View } from "react-native";
+import { StatusBar } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import Navbar from "./Navigation/navbar";
 import { Provider } from "react-redux";
 import store from "./state/store/store";
 import LoginScreen from "./Screens/LoginScreen";
 import "expo-dev-client";
-import {
-	GoogleSignin,
-	GoogleSigninButton,
-	statusCodes,
-} from "@react-native-google-signin/google-signin";
+import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import { useEffect, useState } from "react";
 import auth from "@react-native-firebase/auth";
+import Constants from "expo-constants";
 
 export default function App() {
 	GoogleSignin.configure({
-		webClientId:
-			"678972027203-490pftnrs5lmrkhnudbann126m19qepi.apps.googleusercontent.com",
+		webClientId: Constants.manifest!.extra!.GOOGLE_SSO,
 	});
 	const [initializing, setInitializing] = useState(true);
 	const [user, setUser] = useState(null);
@@ -42,7 +38,7 @@ export default function App() {
 
 	useEffect(() => {
 		const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
-		return subscriber; // unsubscribe on unmount
+		return subscriber;
 	}, []);
 
 	if (initializing) return null;
@@ -53,7 +49,6 @@ export default function App() {
 				<StatusBar hidden />
 				{user && <Navbar logOut={signOut} user={user} />}
 				{!user && <LoginScreen onLogin={onGoogleButtonPress} />}
-				{/* <LoginScreen /> */}
 			</NavigationContainer>
 		</Provider>
 	);
