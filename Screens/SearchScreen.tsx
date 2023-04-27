@@ -37,9 +37,6 @@ export default function SearchScreen({ navigation }: any) {
 			<ImageBackground
 				source={{
 					uri: "https://thumbs.gfycat.com/MistyBleakDrongo-size_restricted.gif",
-					// uri: "https://data.whicdn.com/images/292512295/original.gif",
-					// uri: "https://i.pinimg.com/originals/77/c8/6a/77c86ac76126738f64760a531ccaa041.gif",
-					// uri: "https://img1.wallspic.com/crops/4/2/8/3/6/163824/163824-food-white-orange-yellow-line-828x1792.jpg",
 				}}
 				style={styles.backgroundImage}>
 				<View style={styles.overlay} />

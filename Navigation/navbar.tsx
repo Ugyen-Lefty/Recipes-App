@@ -1,6 +1,6 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import HomeScreen from "../Screens/HomeScreen";
-import SettingsScreen from "../Screens/SettingsScreen";
+import ProfileScreen from "../Screens/ProfileScreen";
 import RecipesScreen from "../Screens/RecipesScreen";
 import FavoriteScreen from "../Screens/FavoritesScreen";
 import DetailsScreen from "../Screens/DetailsScreen";
@@ -19,7 +19,7 @@ import { useState, useEffect } from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import SearchScreen from "../Screens/SearchScreen";
 
-export default function Navbar() {
+export default function Navbar({ logOut, user }: any) {
 	const Tab = createBottomTabNavigator();
 	const Stack = createStackNavigator();
 
@@ -152,7 +152,6 @@ export default function Navbar() {
 			/>
 			<Tab.Screen
 				name="test1"
-				component={SettingsScreen}
 				options={{
 					headerTitle: () => (
 						<View style={styles.header}>
@@ -162,17 +161,18 @@ export default function Navbar() {
 								}}
 								style={styles.image}
 							/>
-							<Text style={styles.title}>Share Your Recipe 🍴</Text>
+							<Text style={styles.title}>Profile</Text>
 						</View>
 					),
 					tabBarIcon: () => (
 						<View>
-							<Icon name="add" size={30} color="white" />
+							<Icon name="person" size={25} color="white" />
 						</View>
 					),
 					tabBarButton: (props) => <CustomButton {...props} />,
-				}}
-			/>
+				}}>
+				{(props) => <ProfileScreen onsignOut={logOut} user={user} />}
+			</Tab.Screen>
 			<Tab.Screen
 				name="fav"
 				component={FavoriteScreen}
