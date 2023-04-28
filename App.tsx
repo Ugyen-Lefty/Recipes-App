@@ -11,44 +11,45 @@ import auth from "@react-native-firebase/auth";
 import Constants from "expo-constants";
 
 export default function App() {
-	GoogleSignin.configure({
-		webClientId: Constants.manifest!.extra!.GOOGLE_SSO,
-	});
-	const [initializing, setInitializing] = useState(true);
-	const [user, setUser] = useState(null);
+	// GoogleSignin.configure({
+	// 	webClientId: Constants.manifest!.extra!.GOOGLE_SSO,
+	// });
+	// const [initializing, setInitializing] = useState(true);
+	// const [user, setUser] = useState(null);
 
-	function onAuthStateChanged(user: any) {
-		setUser(user);
-		if (initializing) setInitializing(false);
-	}
+	// function onAuthStateChanged(user: any) {
+	// 	setUser(user);
+	// 	if (initializing) setInitializing(false);
+	// }
 
-	async function onGoogleButtonPress() {
-		await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
-		const { idToken } = await GoogleSignin.signIn();
+	// async function onGoogleButtonPress() {
+	// 	await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
+	// 	const { idToken } = await GoogleSignin.signIn();
 
-		const googleCredential = auth.GoogleAuthProvider.credential(idToken);
+	// 	const googleCredential = auth.GoogleAuthProvider.credential(idToken);
 
-		return auth().signInWithCredential(googleCredential);
-	}
+	// 	return auth().signInWithCredential(googleCredential);
+	// }
 
-	async function signOut() {
-		await GoogleSignin.revokeAccess();
-		auth().signOut();
-	}
+	// async function signOut() {
+	// 	await GoogleSignin.revokeAccess();
+	// 	auth().signOut();
+	// }
 
-	useEffect(() => {
-		const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
-		return subscriber;
-	}, []);
+	// useEffect(() => {
+	// 	const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
+	// 	return subscriber;
+	// }, []);
 
-	if (initializing) return null;
+	// if (initializing) return null;
 
 	return (
 		<Provider store={store}>
 			<NavigationContainer>
 				<StatusBar hidden />
-				{user && <Navbar logOut={signOut} user={user} />}
-				{!user && <LoginScreen onLogin={onGoogleButtonPress} />}
+				<Navbar />
+				{/* {user && <Navbar logOut={signOut} user={user} />}
+				{!user && <LoginScreen onLogin={onGoogleButtonPress} />} */}
 			</NavigationContainer>
 		</Provider>
 	);
