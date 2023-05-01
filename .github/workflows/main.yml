@@ -31,13 +31,13 @@ jobs:
         run: yarn add @expo/eas-build-job
 
       - name: Check EAS CLI
-        run: yarn eas --version || echo "EAS CLI not found"
+        run: yarn eas --version
 
       - name: Install dependencies
         run: yarn install
 
       - name: Build Android
-        run: npx eas build -p android
+        run: yarn eas build -p android
 
       - name: Build iOS
         run: npx eas build -p ios
