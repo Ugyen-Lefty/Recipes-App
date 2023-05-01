@@ -37,7 +37,7 @@ jobs:
         run: yarn install
 
       - name: Build Android
-        run: yarn eas build -p android
+        run: yarn eas build -p android --profile preview
 
       - name: Build iOS
         run: npx eas build -p ios
