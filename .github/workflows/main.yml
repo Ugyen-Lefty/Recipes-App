@@ -25,7 +25,8 @@ jobs:
         run: yarn add expo-cli
 
       - name: Log in to Expo
-        run: expo login -u ${{ secrets.EXPO_USERNAME }} -p ${{ secrets.EXPO_PASSWORD }}
+        # run: expo login -u ${{ secrets.EXPO_USERNAME }} -p ${{ secrets.EXPO_PASSWORD }}
+        run: expo login -u ugyensamdrupdorji@gmail.com -p lefty1998
 
       - name: Check Expo login
         run: expo whoami
