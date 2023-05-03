@@ -31,3 +31,4 @@ const dataSlice = createSlice({
 });
 
 export default dataSlice.reducer;
+export const recipeReducer = dataSlice.reducer;

@@ -9,6 +9,8 @@ import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import { useEffect, useState } from "react";
 import auth from "@react-native-firebase/auth";
 import Constants from "expo-constants";
+import { PersistGate } from "redux-persist/integration/react";
+import { persistor } from "./state/store/redux-persist";
 
 export default function App() {
 	GoogleSignin.configure({
@@ -45,11 +47,13 @@ export default function App() {
 
 	return (
 		<Provider store={store}>
-			<NavigationContainer>
-				<StatusBar hidden />
-				{user && <Navbar logOut={signOut} user={user} />}
-				{!user && <LoginScreen onLogin={onGoogleButtonPress} />}
-			</NavigationContainer>
+			<PersistGate loading={null} persistor={persistor}>
+				<NavigationContainer>
+					<StatusBar hidden />
+					{user && <Navbar logOut={signOut} user={user} />}
+					{!user && <LoginScreen onLogin={onGoogleButtonPress} />}
+				</NavigationContainer>
+			</PersistGate>
 		</Provider>
 	);
 }
