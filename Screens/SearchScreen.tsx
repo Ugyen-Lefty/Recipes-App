@@ -1,9 +1,6 @@
 import {
-	Text,
 	View,
 	StyleSheet,
-	Image,
-	TouchableOpacity,
 	FlatList,
 	ImageBackground,
 	TextInput,
@@ -12,22 +9,32 @@ import {
 import Card from "../Components/Card";
 import { useState, useEffect } from "react";
 import { AntDesign } from "@expo/vector-icons";
+import { useAppDispatch } from "../state/store/store";
+import { useSelector } from "react-redux";
+import { fetchData } from "../state/favorites/reducer";
 
 export default function SearchScreen({ navigation }: any) {
 	const [recipe, setRecipes] = useState<any>(null);
+	const [search, setSearch] = useState<any>(null);
 
 	const renderItem = ({ item }: { item: any }) => (
 		<Card data={item} navigation={navigation}></Card>
 	);
 
+	const dispatch = useAppDispatch();
+	const data = useSelector((state: any) => state.data.data);
+
 	useEffect(() => {
-		fetch(
-			`https://yum-foods-default-rtdb.asia-southeast1.firebasedatabase.app/Recipes.json?orderBy="name"`
-		)
-			.then((response) => response.json())
-			.then((json) => setRecipes(json))
-			.catch((error) => console.error(error));
-	}, []);
+		dispatch(fetchData());
+	}, [dispatch]);
+
+	function searchRecipes(text: any) {
+		setSearch(text);
+		const result = data.filter((item: any) => {
+			return item?.name.toLowerCase().includes(text.toLowerCase());
+		});
+		setRecipes(result);
+	}
 
 	return (
 		<KeyboardAvoidingView
@@ -40,15 +47,6 @@ export default function SearchScreen({ navigation }: any) {
 				}}
 				style={styles.backgroundImage}>
 				<View style={styles.overlay} />
-				{/* <View style={styles.container}>
-				<View style={{ marginBottom: 100 }}>
-					<FlatList
-						data={recipe}
-						renderItem={renderItem}
-						keyExtractor={(item) => item.name.toString()}
-					/>
-				</View>
-			</View> */}
 				<View style={styles.container}>
 					<View style={styles.searchBox}>
 						<AntDesign
@@ -61,39 +59,42 @@ export default function SearchScreen({ navigation }: any) {
 							placeholder="Search for recipes"
 							style={styles.input}
 							placeholderTextColor="#A9A9A9"
+							onChangeText={searchRecipes}
 						/>
 					</View>
+					{search && (
+						<View style={styles.searchContainer}>
+							<View style={{ marginBottom: 100 }}>
+								<FlatList
+									data={recipe}
+									renderItem={renderItem}
+									keyExtractor={(item) => item?.name.toString()}
+								/>
+							</View>
+						</View>
+					)}
 				</View>
 			</ImageBackground>
 		</KeyboardAvoidingView>
-		// <View style={styles.container}>
-		// 	<Text>{recipe?.recipes?.name}</Text>
-		// 	{/* <FlatList
-		// 		data={recipe}
-		// 		renderItem={({ item }) => <Card data={item} />}
-		// 		keyExtractor={(item) => item.name}
-		// 	/> */}
-		// </View>
 	);
 }
 
 const styles = StyleSheet.create({
-	// container: {
-	// 	flex: 1,
-	// 	flexDirection: "column",
-	// 	padding: 30,
-	// },
 	backgroundImage: {
 		flex: 1,
 		resizeMode: "cover",
 	},
 	overlay: {
 		...StyleSheet.absoluteFillObject,
-		backgroundColor: "rgba(0,0,0,0.3)", // Change opacity to adjust darkness
+		backgroundColor: "rgba(0,0,0,0.3)",
 	},
 	container: {
 		paddingVertical: 30,
 		paddingHorizontal: 16,
+	},
+	searchContainer: {
+		padding: 30,
+		marginBottom: 80,
 	},
 	searchBox: {
 		backgroundColor: "#fff",
